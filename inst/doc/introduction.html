@@ -556,6 +556,7 @@ F_{1-\alpha_2}\big(2(y_0+1),2(n-y_0)\big)}.
 </div>
 <div id="几种估计方法的模拟和比较" class="section level2">
 <h2>3.几种估计方法的模拟和比较</h2>
+<p>我们生成<span class="math inline">\(n=10,50,200,1000\)</span>的四组服从<span class="math inline">\(Cau(0,1)\)</span>的独立同分布随机变量<span class="math inline">\(X_1,X_2,X_3,X_4\)</span>，并且用不同的估计方法来生成位置参数和尺度参数的点估计和区间估计，并进行比较：</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">5</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>x1<span class="ot">&lt;-</span><span class="fu">rcauchy</span>(<span class="dv">10</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>x2<span class="ot">&lt;-</span><span class="fu">rcauchy</span>(<span class="dv">50</span>)</span>
@@ -579,24 +580,24 @@ F_{1-\alpha_2}\big(2(y_0+1),2(n-y_0)\big)}.
 <span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>IME_mu_intervalest<span class="ot">&lt;-</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fu">Cauchy_intervalparaest_IME_mu</span>(x1,lambda,alpha),<span class="fu">Cauchy_intervalparaest_IME_mu</span>(x2,lambda,alpha),<span class="fu">Cauchy_intervalparaest_IME_mu</span>(x3,lambda,alpha),<span class="fu">Cauchy_intervalparaest_IME_mu</span>(x4,lambda,alpha)),<span class="at">nrow=</span><span class="dv">2</span>)</span>
 <span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a></span>
 <span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>IME_lambda_intervalest<span class="ot">&lt;-</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fu">Cauchy_intervalparaest_IME_lambda</span>(x1,mu,C,alpha1,alpha2),<span class="fu">Cauchy_intervalparaest_IME_lambda</span>(x2,mu,C,alpha1,alpha2),<span class="fu">Cauchy_intervalparaest_IME_lambda</span>(x3,mu,C,alpha1,alpha2),<span class="fu">Cauchy_intervalparaest_IME_lambda</span>(x4,mu,C,alpha1,alpha2)),<span class="at">nrow=</span><span class="dv">2</span>)</span></code></pre></div>
-<p><span class="math inline">\(mu\)</span>基于顺序统计量的点估计</p>
+<p>1.<span class="math inline">\(mu\)</span>基于顺序统计量的点估计</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>order_mu_est</span></code></pre></div>
 <pre><code>## [1] -0.420439171  0.275222457  0.125748533 -0.009250449</code></pre>
-<p><span class="math inline">\(mu\)</span>基于逆矩估计法的点估计</p>
+<p>2.<span class="math inline">\(mu\)</span>基于逆矩估计法的点估计</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>IME_mu_est</span></code></pre></div>
 <pre><code>## [1] -0.36989052  0.30646203  0.09369902  0.00524364</code></pre>
-<p><span class="math inline">\(mu\)</span>基于逆矩估计法的区间估计</p>
+<p>3.<span class="math inline">\(mu\)</span>基于逆矩估计法的区间估计</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>IME_mu_intervalest</span></code></pre></div>
 <pre><code>##           [,1]       [,2]        [,3]       [,4]
 ## [1,] -2.451365 -0.3911377 -0.09512312 -0.1283219
 ## [2,]  1.142276  1.0675756  0.55093567  0.1871730</code></pre>
-<p><span class="math inline">\(lambda\)</span>基于顺序统计量的点估计</p>
+<p>4.<span class="math inline">\(lambda\)</span>基于顺序统计量的点估计</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>order_lambda_est</span></code></pre></div>
 <pre><code>## [1] 0.7769494 0.8640012 0.7985698 0.9997844</code></pre>
-<p><span class="math inline">\(lambda\)</span>基于逆矩估计法的点估计</p>
+<p>5.<span class="math inline">\(lambda\)</span>基于逆矩估计法的点估计</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>IME_lambda_est</span></code></pre></div>
 <pre><code>## [1] 0.4873795 1.0193989 0.8712693 1.0263025</code></pre>
-<p><span class="math inline">\(lambda\)</span>基于逆矩估计法的区间估计</p>
+<p>6.<span class="math inline">\(lambda\)</span>基于逆矩估计法的区间估计</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>IME_lambda_intervalest</span></code></pre></div>
 <pre><code>##            [,1]      [,2]      [,3]      [,4]
 ## [1,] 0.05943245 0.6116836 0.6772168 0.9249502

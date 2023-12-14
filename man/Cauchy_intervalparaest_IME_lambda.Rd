@@ -2,7 +2,7 @@
 % Please edit documentation in R/Cauchy_paraest_IME.R
 \name{Cauchy_intervalparaest_IME_lambda}
 \alias{Cauchy_intervalparaest_IME_lambda}
-\title{Interval estimation of the positional parameter of a Cauchy distribution using R.}
+\title{Interval estimation of the scale parameter of a Cauchy distribution using R.}
 \usage{
 Cauchy_intervalparaest_IME_lambda(x, mu, C, alpha1, alpha2)
 }
@@ -21,7 +21,7 @@ Cauchy_intervalparaest_IME_lambda(x, mu, C, alpha1, alpha2)
 the interval estimation of the scale parameter \code{n}
 }
 \description{
-Inverse moment interval estimation of the positional parameter of a Cauchy distribution if the scale parameter is known.
+Inverse moment interval estimation of the scale parameter of a Cauchy distribution if the positional parameter is known.
 }
 \examples{
 \dontrun{

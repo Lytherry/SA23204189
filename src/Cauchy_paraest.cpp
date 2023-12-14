@@ -41,16 +41,12 @@ double quantile0(NumericVector x, double q)
 //' @export
 // [[Rcpp::export]]
 double Cauchy_paraest_mu(NumericVector x, int a) {
-   double mu_hat;
-  
    if(a==1){
-     mu_hat = quantile0(x,0.5);
+     return(quantile0(x,0.5));
    }
-   else if(a==2){
-     mu_hat = 0.5*(quantile0(x,0.25)+quantile0(x,0.75));
+   else{
+     return(0.5*(quantile0(x,0.25)+quantile0(x,0.75)));
    }
-   
-   return mu_hat;
 }
 
 //' @title Predict the scale parameter of a Cauchy distribution using Rcpp.
@@ -67,19 +63,15 @@ double Cauchy_paraest_mu(NumericVector x, int a) {
 //' @export
 // [[Rcpp::export]]
 double Cauchy_paraest_lambda(NumericVector x, int b) {
-   double lambda_hat;
-  
    if(b==1){
-     lambda_hat = quantile0(x,0.75)-quantile0(x,0.5);
+     return(quantile0(x,0.75)-quantile0(x,0.5));
    }
    else if(b==2){
-     lambda_hat = quantile0(x,0.5)-quantile0(x,0.25);
+     return(quantile0(x,0.5)-quantile0(x,0.25));
    }
-   else if(b==3){
-     lambda_hat = 0.5*(quantile0(x,0.75)-quantile0(x,0.25));
+   else{
+     return(0.5*(quantile0(x,0.75)-quantile0(x,0.25)));
    }
-   
-   return lambda_hat;
 }
 
 

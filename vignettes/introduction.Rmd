@@ -284,6 +284,8 @@ Cauchy_intervalparaest_IME_lambda<-function(x,mu,C,alpha1,alpha2){
 
 ## 3.几种估计方法的模拟和比较
 
+我们生成$n=10,50,200,1000$的四组服从$Cau(0,1)$的独立同分布随机变量$X_1,X_2,X_3,X_4$，并且用不同的估计方法来生成位置参数和尺度参数的点估计和区间估计，并进行比较：
+
 ```{r}
 set.seed(5)
 x1<-rcauchy(10)
@@ -310,32 +312,32 @@ IME_mu_intervalest<-matrix(c(Cauchy_intervalparaest_IME_mu(x1,lambda,alpha),Cauc
 IME_lambda_intervalest<-matrix(c(Cauchy_intervalparaest_IME_lambda(x1,mu,C,alpha1,alpha2),Cauchy_intervalparaest_IME_lambda(x2,mu,C,alpha1,alpha2),Cauchy_intervalparaest_IME_lambda(x3,mu,C,alpha1,alpha2),Cauchy_intervalparaest_IME_lambda(x4,mu,C,alpha1,alpha2)),nrow=2)
 ```
 
-$mu$基于顺序统计量的点估计
+1.$mu$基于顺序统计量的点估计
 ```{r}
 order_mu_est
 ```
 
-$mu$基于逆矩估计法的点估计
+2.$mu$基于逆矩估计法的点估计
 ```{r}
 IME_mu_est
 ```
 
-$mu$基于逆矩估计法的区间估计
+3.$mu$基于逆矩估计法的区间估计
 ```{r}
 IME_mu_intervalest
 ```
 
-$lambda$基于顺序统计量的点估计
+4.$lambda$基于顺序统计量的点估计
 ```{r}
 order_lambda_est
 ```
 
-$lambda$基于逆矩估计法的点估计
+5.$lambda$基于逆矩估计法的点估计
 ```{r}
 IME_lambda_est
 ```
 
-$lambda$基于逆矩估计法的区间估计
+6.$lambda$基于逆矩估计法的区间估计
 ```{r}
 IME_lambda_intervalest
 ```
