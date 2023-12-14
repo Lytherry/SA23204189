@@ -1,0 +1,17 @@
+Package: SA23204189
+Type: Package
+Title: This package provide several methods to estimate the two parameters of a Cauchy distribution
+Version: 1.0
+Date: 2023-12-04
+Author: Zheyu Li
+Maintainer: Zheyu Li <lizheyu2000@mail.ustc.edu.cn>
+Description: This package includes Rcpp version of the point estimation (based on order statistics) of the two parameters of a Cauchy distribution if the two parameters are unknown. It also includes R version of the point estimation and the interval estimation (based on inverse moment interval estimation) of the positional and scale parameters of a Cauchy distribution if the other parameter is unknown. 
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.11)
+LinkingTo: Rcpp
+Encoding: UTF-8
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 7.2.3
+URL: http://github.com/Lytherry/SA23204189
+BugReports: http://github.com/Lytherry/SA23204189/issues
