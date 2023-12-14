@@ -1,0 +1,343 @@
+---
+title: "Introduction to SA23204189"
+author: "Zheyu Li"
+date: "2023-12-04"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to SA23204189}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Overview
+
+X是一组独立同分布的柯西变量，R包 __SA23204189__ 实现了对该柯西分布两参数的点估计和区间估计。在Rcpp部分，我们利用顺序统计量方法，实现了在尺度参数$\lambda$未知的情况下，对位置参数$\mu$的点估计，以及在位置参数$\mu$未知的情况下，对尺度参数$\lambda$的点估计。在R部分，我们利用逆矩估计方法，实现了在尺度参数$\lambda$已知的情况下，对位置参数$\mu$的点估计和区间估计，以及在位置参数$\mu$已知的情况下，对尺度参数$\lambda$的点估计和区间估计。
+
+## 1.利用顺序统计量方法的点估计
+
+### 1.1 位置参数和尺度参数的点估计（另一个参数未知）
+
+柯西分布的分布函数值$F(\mu)=\frac{1}{2},F(\mu-\lambda)=\frac{1}{4},F(\mu+\lambda)=\frac{3}{4}$。基于以上性质，可以对$\mu$和$\lambda$提出几种常见的分位数估计：
+
+(1)$\hat{\mu}=X_{\frac{1}{2}}$;
+
+(2)$\hat{\mu}=\frac{1}{2}\big(X_{\frac{1}{4}}+X_{\frac{3}{4}}\big)$;
+
+(3)$\hat{\lambda}=X_{\frac{3}{4}}-X_{\frac{1}{2}}$;
+
+(4)$\hat{\lambda}=X_{\frac{1}{2}}-X_{\frac{1}{4}}$;
+
+(5)$\hat{\lambda}=\frac{1}{2}\big(X_{\frac{3}{4}}-X_{\frac{1}{4}}\big)$.
+
+对一般的分位数估计的无偏性、相合性和渐近正态性，我们有以下定理：
+
+__定理1.1__ 如果一个连续分布$F$的p分位数为$x_p(F)$，且变量$k_n$满足$\lim_{n\rightarrow\infty} \frac{k_n}{n}=p$，则
+
+(1)$X_{(k_n)}$为$x_p(F)$的渐近无偏估计；
+
+(2)$X_{(k_n)}$为$x_p(F)$的强相合估计。
+
+### 1.2 代码实现
+
+```{r,include=FALSE}
+library(SA23204189)
+```
+
+下面这个函数利用顺序统计量，在尺度参数$\lambda$未知的情况下对位置参数$\mu$进行点估计。
+
+```{r,eval=FALSE}
+NumericVector Cauchy_paraest_mu(NumericVector x, int a) {
+   int mu_hat;
+  
+   if(a==1){
+     mu_hat = quantile(x,0.5);
+   }
+   else if(a==2){
+     mu_hat = 0.5*(quantile(x,0.25)+quantile(x,0.75));
+   }
+   
+   return mu_hat;
+}
+```
+
+下面这个函数利用顺序统计量，在位置参数$\mu$未知的情况下对尺度参数$\lambda$进行点估计。
+
+```{r,eval=FALSE}
+NumericVector Cauchy_paraest_lambda(NumericVector x, int b) {
+   int lambda_hat;
+  
+   if(b==1){
+     lambda_hat = quantile(x,0.75)-quantile(x,0.5);
+   }
+   else if(b==2){
+     lambda_hat = quantile(x,0.5)-quantile(x,0.25);
+   }
+   else if(b==3){
+     lambda_hat = 0.5*(quantile(x,0.75)-quantile(x,0.25));
+   }
+   
+   return lambda_hat;
+}
+```
+
+
+## 2.利用逆矩估计法的点估计和区间估计
+
+### 2.1 逆矩估计法的简单介绍
+
+逆矩估计法的大体思路如下：若$X_1,X_2,\cdots,X_n$为从一个含有未知参数的分布中取出的一组独立样本，一般来说，这些样本的分布与未知参数有关。现对每个样本进行同一种变换得到另一组样本$Y_1,Y_2,\cdots,Y_n$，使得变换后的样本分布与这个未知参数无关（或者说$Y_i$为一个枢轴变量）。这样新样本的总体矩不依赖于未知参数，但是样本矩依赖于未知参数，让总体矩等于样本矩，就可以得到未知参数的一个估计。逆矩估计既可以对未知参数参数进行点估计，也可应用于未知参数的区间估计。
+
+现考虑取自柯西分布$Cau(\mu,\lambda)$的n个独立样本$X_1,X_2,\cdots,X_n$，下面用逆矩估计方法分别讨论对$\lambda$和$\mu$的估计。
+
+### 2.2 对位置参数的估计（尺度参数已知）
+
+#### 2.2.1 估计方法的介绍
+
+记随机变量$Y_i=F_X^{-1}(X_i)=\frac{1}{2}+\frac{1}{\pi}\arctan 
+\Big(\frac{X_i-\mu}{\lambda}\Big),i=1,2,\cdots,n$，则$Y_i$独立同分布于均匀分布$U(0,1)$，显然$Y_i$的分布不依赖于未知参数$\mu$，那么由逆矩估计的思想，$Y_i$的一阶样本矩等于均匀分布$U(0,1)$的期望，即
+\begin{equation*}
+    \frac{1}{n}\sum_{i = 1}^{n}  Y_i= \frac{1}{n}\sum_{i = 1}^{n} \Bigg[\frac{1}{2}+\frac{1}{\pi}\arctan 
+    \Big(\frac{X_i-\mu}{\lambda}\Big) \Bigg]=\frac{1}{2},
+\end{equation*}
+或者说
+\begin{equation*}
+    \sum_{i = 1}^{n} \arctan 
+    \Big(\frac{X_i-\mu}{\lambda}\Big) =0.
+\end{equation*}
+
+为了继续进行$\mu$的点估计和区间估计，我们引入以下两个引理：
+
+__引理2.1__ 若$Y_1,Y_2,\cdots,Y_n$独立同分布于均匀分布$U(0,1)$，则
+    \begin{equation*}
+        -2\sum_{i = 1}^{n} \ln Y_i \sim \chi^2(2n) .
+    \end{equation*}
+
+__引理2.2__ 
+
+(1)关于实数$\mu$的方程
+\[
+g(\mu)=\sum_{i = 1}^{n} \arctan 
+\Big(\frac{X_i-\mu}{\lambda}\Big) =0.
+\]
+有且仅有一个实数根。
+
+(2)对任意的$a>0$，关于实数$\mu$的方程
+\[
+h(\mu)=-2 \sum_{i = 1}^{n} \ln \Bigg[ \frac{1}{2}+\frac{1}{\pi}\arctan 
+\Big(\frac{X_i-\mu}{\lambda}\Big)\Bigg] =a.
+\]
+有且仅有一个实数根。
+
+于是根据上面这些引理，我们有以下结论：
+
+(1)尺度参数$\mu$的点估计$\hat{\mu}$就是方程$g(\mu)=0$的实数根。
+
+(2)尺度参数$\mu$的$1-\alpha$置信区间为$[\hat{\mu_1},\hat{\mu_2}]$，
+其中$\hat{\mu_1},\hat{\mu_2}$分别为方程$h(\mu)=\chi_{\alpha/2}^2(2n)$和方程
+$h(\mu)=\chi_{1-\alpha/2}^2(2n)$的实根。
+
+#### 2.2.2 代码实现
+
+下面这个函数利用逆矩估计，在尺度参数$\lambda$已知的情况下对位置参数$\mu$进行点估计。
+
+```{r,eval=FALSE}
+Cauchy_paraest_IME_mu<-function(x,lambda){
+  f<-function(mu){
+    sum(atan((x-mu)/lambda))
+  }
+  
+  xmin<-min(x)
+  xmax<-max(x)
+  uniroot(f,c(xmin,xmax))$root
+}
+```
+
+下面这个函数利用逆矩估计，在尺度参数$\lambda$已知的情况下对位置参数$\mu$进行区间估计。
+
+```{r,eval=FALSE}
+Cauchy_intervalparaest_IME_mu<-function(x,lambda,alpha){
+  f<-function(mu){
+    -2*sum(log(0.5+1/pi*atan((x-mu)/lambda)))
+  }
+  
+  xmin<-min(x)
+  xmax<-max(x)
+  n<-length(x)
+  
+  f1<-function(mu){
+    f(mu)-qchisq(alpha/2,2*n)
+  }
+  
+  f2<-function(mu){
+    f(mu)-qchisq(1-alpha/2,2*n)
+  }
+  
+  mu1_hat<-uniroot(f1,c(xmin,xmax))$root
+  mu2_hat<-uniroot(f2,c(xmin,xmax))$root
+  c(mu1_hat,mu2_hat)
+}
+```
+
+### 2.3 对尺度参数的估计（位置参数已知）
+
+#### 2.3.1 估计方法的介绍
+
+（1）点估计
+
+事先给定一个合适大小的常数$C>0$，记随机变量
+\begin{equation*}
+    Y_i=\begin{cases}
+        1,\quad |X_i-\mu|\leq C \\
+        0,\quad |X_i-\mu|>C
+    \end{cases}
+    ,\quad i=1,2,\cdots,n
+\end{equation*}
+则$Y_i$独立同分布于两点分布$B(1,p)$，其中
+\begin{equation*}
+    p=P(|X_i-\mu|\leq C)=\frac{2}{\pi}\arctan \frac{C}{\lambda},
+\end{equation*}
+尽管此处$Y_i$的分布依然依赖于未知参数$\lambda$，但是依然可以借助逆矩估计的思想得出，
+$Y_i$的一阶样本矩等于两点分布$B(0,p)$的期望，即
+\begin{equation*}
+    \frac{1}{n} \sum_{i = 1}^{n} Y_i =  \frac{2}{\pi}\arctan \frac{C}{\lambda}.
+\end{equation*}
+于是得到$\lambda$的一个点估计 
+\begin{equation*}
+    \hat{\lambda}=\frac{C}{\tan\Big( \frac{\pi}{2n} \sum_{i = 1}^{n} Y_i \Big)}.
+\end{equation*}
+并作以下规定：当$\sum_{i = 1}^{n} Y_i =n$时，$\hat{\lambda}=0$；
+当$\sum_{i = 1}^{n} Y_i =0$时，$\hat{\lambda}=+\infty$。实际应用中，若
+出现$\sum_{i = 1}^{n} Y_i$接近0或者接近n的情况，往往分别说明常数$C$取得太小或者太大，
+可以重新调整常数$C$的大小再次进行估计。
+
+（2）区间估计
+
+为了用上述方法得到$\lambda$的区间估计，我们引入以下定理：
+
+__引理2.2__ 若$X_1,X_2,\cdots,X_n$为从两点分布$B(1,p)$中取出的独立样本，其中$p$为未知参数，则
+    参数$p$的$1-\alpha$区间估计为$[\hat{p_1},\hat{p_2}]$，其中
+\begin{equation*}
+    \hat{p_1}=\frac{1}{1+\frac{n-x_0+1}{x_0} F_{1-\alpha_1}\big(2(n-x_0+1),2x_0\big)},
+\end{equation*}
+\begin{equation*}
+    \hat{p_2}=\frac{\frac{x_0+1}{n-x_0} F_{1-\alpha_2}\big(2(x_0+1),2(n-x_0)\big)}{1+\frac{x_0+1}{n-x_0} F_{1-\alpha_2}\big(2(x_0+1),2(n-x_0)\big)}.
+\end{equation*}
+其中$x_0=\sum_{i = 1}^{n} X_i$，$\alpha_1,\alpha_2$为非负实数且$\alpha_1+\alpha_2=\alpha$，
+$F_{\alpha}(m_1,m_2)$是参数为$m_1,m_2$的F分布的$\alpha$左分位数，特别地
+
+当$x_0=0$时，取$\hat{p_1}=0,\hat{p_2}=\frac{F_{1-\alpha}(2n)}{n+F_{1-\alpha}(2n)}$；
+
+当$x_0=n$时，取$\hat{p_1}=\frac{n}{n+F_{1-\alpha}(2n)},\hat{p_2}=1$.
+
+根据以上引理，我们记$y_0=\sum_{i=1}^{n} Y_i$，当$y_0\neq 0$或$n$时，记
+\begin{equation*}
+    p_1=\frac{1}{1+\frac{n-y_0+1}{y_0} F_{1-\alpha_1}\big(2(n-y_0+1),2y_0\big)},
+\end{equation*}
+\begin{equation*}
+    p_2=\frac{\frac{y_0+1}{n-y_0} F_{1-\alpha_2}\big(2(y_0+1),2(n-y_0)\big)}{1+\frac{y_0+1}{n-y_0} F_{1-\alpha_2}\big(2(y_0+1),2(n-y_0)\big)}.
+\end{equation*}
+解不等式$p_1\leq \frac{2}{\pi}\arctan \frac{C}{\lambda}\leq p_2$
+就可以得到$\lambda$的$1-\alpha$的区间估计$[\hat{\lambda_1},\hat{\lambda_2}]$，
+其中
+\begin{equation*}
+    \hat{\lambda_1}=\frac{C}{\tan \big(\frac{\pi}{2} p_2\big)},
+\end{equation*}
+\begin{equation*}
+    \hat{\lambda_2}=\frac{C}{\tan \big(\frac{\pi}{2} p_1\big)}.
+\end{equation*}
+
+当$y_0=0$时，取$\hat{\lambda_1}=\frac{C}{\tan \big( \frac{\pi}{2} \frac{F_{1-\alpha}(2n)}{n+F_{1-\alpha}(2n)} \big)}$, $\hat{\lambda_2}=+\infty$；
+
+当$y_0=n$时，取$\hat{\lambda_1}=0$, $\hat{\lambda_2}=\frac{C}{\tan\big(\frac{\pi}{2}\frac{1}{n+F_{1-\alpha}(2n)} \big)}$.
+
+#### 2.3.2 代码实现
+
+下面这个函数利用逆矩估计，在位置参数$\mu$已知的情况下对尺度参数$\lambda$进行点估计。
+
+```{r,eval=FALSE}
+Cauchy_paraest_IME_lambda<-function(x,mu,C){
+  y<-as.numeric(abs(x-mu)<=C)
+  stopifnot(sum(y)>0&&sum(y)<length(x))
+  n<-length(x)
+  C/tan(pi*sum(y)/(2*n))
+}
+```
+
+下面这个函数利用逆矩估计，在位置参数$\mu$已知的情况下对尺度参数$\lambda$进行区间估计。
+
+```{r,eval=FALSE}
+Cauchy_intervalparaest_IME_lambda<-function(x,mu,C,alpha1,alpha2){
+  y<-as.numeric(abs(x-mu)<=C)
+  stopifnot(sum(y)>0&&sum(y)<length(x))
+  
+  n<-length(x)
+  y0<-sum(y)
+  
+  p1<-1/(1+(n-y0+1)/y0*qf(1-alpha1,2*(n-y0+1),2*y0))
+  p2<-1-1/(1+(y0+1)/(n-y0)*qf(1-alpha2,2*(y0+1),2*(n-y0)))
+  
+  lambda1_hat<-C/tan(pi*p2/2)
+  lambda2_hat<-C/tan(pi*p1/2)
+  c(lambda1_hat,lambda2_hat)
+}
+```
+
+## 3.几种估计方法的模拟和比较
+
+```{r}
+set.seed(5)
+x1<-rcauchy(10)
+x2<-rcauchy(50)
+x3<-rcauchy(200)
+x4<-rcauchy(1000)
+
+mu<-0
+lambda<-1
+C<-1.5
+alpha<-0.05
+alpha1<-alpha2<-0.025
+
+order_mu_est<-c(Cauchy_paraest_mu(sort(x1),2),Cauchy_paraest_mu(sort(x2),2),Cauchy_paraest_mu(sort(x3),2),Cauchy_paraest_mu(sort(x4),2))
+
+order_lambda_est<-c(Cauchy_paraest_lambda(sort(x1),3),Cauchy_paraest_lambda(sort(x2),3),Cauchy_paraest_lambda(sort(x3),3),Cauchy_paraest_lambda(sort(x4),3))
+
+IME_mu_est<-c(Cauchy_paraest_IME_mu(x1,lambda),Cauchy_paraest_IME_mu(x2,lambda),Cauchy_paraest_IME_mu(x3,lambda),Cauchy_paraest_IME_mu(x4,lambda))
+
+IME_lambda_est<-c(Cauchy_paraest_IME_lambda(x1,mu,C),Cauchy_paraest_IME_lambda(x2,mu,C),Cauchy_paraest_IME_lambda(x3,mu,C),Cauchy_paraest_IME_lambda(x4,mu,C))
+
+IME_mu_intervalest<-matrix(c(Cauchy_intervalparaest_IME_mu(x1,lambda,alpha),Cauchy_intervalparaest_IME_mu(x2,lambda,alpha),Cauchy_intervalparaest_IME_mu(x3,lambda,alpha),Cauchy_intervalparaest_IME_mu(x4,lambda,alpha)),nrow=2)
+
+IME_lambda_intervalest<-matrix(c(Cauchy_intervalparaest_IME_lambda(x1,mu,C,alpha1,alpha2),Cauchy_intervalparaest_IME_lambda(x2,mu,C,alpha1,alpha2),Cauchy_intervalparaest_IME_lambda(x3,mu,C,alpha1,alpha2),Cauchy_intervalparaest_IME_lambda(x4,mu,C,alpha1,alpha2)),nrow=2)
+```
+
+$mu$基于顺序统计量的点估计
+```{r}
+order_mu_est
+```
+
+$mu$基于逆矩估计法的点估计
+```{r}
+IME_mu_est
+```
+
+$mu$基于逆矩估计法的区间估计
+```{r}
+IME_mu_intervalest
+```
+
+$lambda$基于顺序统计量的点估计
+```{r}
+order_lambda_est
+```
+
+$lambda$基于逆矩估计法的点估计
+```{r}
+IME_lambda_est
+```
+
+$lambda$基于逆矩估计法的区间估计
+```{r}
+IME_lambda_intervalest
+```
+
+可以看出，各种估计方法都有不错的效果，且随着样本个数的增加，估计的效果会更好。

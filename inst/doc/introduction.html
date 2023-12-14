@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Zheyu Li" />
+
+<meta name="date" content="2023-12-04" />
+
+<title>Introduction to SA23204189</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to SA23204189</h1>
+<h4 class="author">Zheyu Li</h4>
+<h4 class="date">2023-12-04</h4>
+
+
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>X是一组独立同分布的柯西变量，R包 <strong>SA23204189</strong>
+实现了对该柯西分布两参数的点估计和区间估计。在Rcpp部分，我们利用顺序统计量方法，实现了在尺度参数<span class="math inline">\(\lambda\)</span>未知的情况下，对位置参数<span class="math inline">\(\mu\)</span>的点估计，以及在位置参数<span class="math inline">\(\mu\)</span>未知的情况下，对尺度参数<span class="math inline">\(\lambda\)</span>的点估计。在R部分，我们利用逆矩估计方法，实现了在尺度参数<span class="math inline">\(\lambda\)</span>已知的情况下，对位置参数<span class="math inline">\(\mu\)</span>的点估计和区间估计，以及在位置参数<span class="math inline">\(\mu\)</span>已知的情况下，对尺度参数<span class="math inline">\(\lambda\)</span>的点估计和区间估计。</p>
+</div>
+<div id="利用顺序统计量方法的点估计" class="section level2">
+<h2>1.利用顺序统计量方法的点估计</h2>
+<div id="位置参数和尺度参数的点估计另一个参数未知" class="section level3">
+<h3>1.1 位置参数和尺度参数的点估计（另一个参数未知）</h3>
+<p>柯西分布的分布函数值<span class="math inline">\(F(\mu)=\frac{1}{2},F(\mu-\lambda)=\frac{1}{4},F(\mu+\lambda)=\frac{3}{4}\)</span>。基于以上性质，可以对<span class="math inline">\(\mu\)</span>和<span class="math inline">\(\lambda\)</span>提出几种常见的分位数估计：</p>
+<p>(1)<span class="math inline">\(\hat{\mu}=X_{\frac{1}{2}}\)</span>;</p>
+<p>(2)<span class="math inline">\(\hat{\mu}=\frac{1}{2}\big(X_{\frac{1}{4}}+X_{\frac{3}{4}}\big)\)</span>;</p>
+<p>(3)<span class="math inline">\(\hat{\lambda}=X_{\frac{3}{4}}-X_{\frac{1}{2}}\)</span>;</p>
+<p>(4)<span class="math inline">\(\hat{\lambda}=X_{\frac{1}{2}}-X_{\frac{1}{4}}\)</span>;</p>
+<p>(5)<span class="math inline">\(\hat{\lambda}=\frac{1}{2}\big(X_{\frac{3}{4}}-X_{\frac{1}{4}}\big)\)</span>.</p>
+<p>对一般的分位数估计的无偏性、相合性和渐近正态性，我们有以下定理：</p>
+<p><strong>定理1.1</strong> 如果一个连续分布<span class="math inline">\(F\)</span>的p分位数为<span class="math inline">\(x_p(F)\)</span>，且变量<span class="math inline">\(k_n\)</span>满足<span class="math inline">\(\lim_{n\rightarrow\infty}
+\frac{k_n}{n}=p\)</span>，则</p>
+<p>(1)<span class="math inline">\(X_{(k_n)}\)</span>为<span class="math inline">\(x_p(F)\)</span>的渐近无偏估计；</p>
+<p>(2)<span class="math inline">\(X_{(k_n)}\)</span>为<span class="math inline">\(x_p(F)\)</span>的强相合估计。</p>
+</div>
+<div id="代码实现" class="section level3">
+<h3>1.2 代码实现</h3>
+<p>下面这个函数利用顺序统计量，在尺度参数<span class="math inline">\(\lambda\)</span>未知的情况下对位置参数<span class="math inline">\(\mu\)</span>进行点估计。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>NumericVector <span class="fu">Cauchy_paraest_mu</span>(NumericVector x, int a) {</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>   int mu_hat;</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  </span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>   <span class="cf">if</span>(a<span class="sc">==</span><span class="dv">1</span>){</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>     mu_hat <span class="ot">=</span> <span class="fu">quantile</span>(x,<span class="fl">0.5</span>);</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>   }</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>   <span class="cf">else</span> <span class="cf">if</span>(a<span class="sc">==</span><span class="dv">2</span>){</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>     mu_hat <span class="ot">=</span> <span class="fl">0.5</span><span class="sc">*</span>(<span class="fu">quantile</span>(x,<span class="fl">0.25</span>)<span class="sc">+</span><span class="fu">quantile</span>(x,<span class="fl">0.75</span>));</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>   }</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>   </span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>   return mu_hat;</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>}</span></code></pre></div>
+<p>下面这个函数利用顺序统计量，在位置参数<span class="math inline">\(\mu\)</span>未知的情况下对尺度参数<span class="math inline">\(\lambda\)</span>进行点估计。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>NumericVector <span class="fu">Cauchy_paraest_lambda</span>(NumericVector x, int b) {</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>   int lambda_hat;</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  </span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>   <span class="cf">if</span>(b<span class="sc">==</span><span class="dv">1</span>){</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>     lambda_hat <span class="ot">=</span> <span class="fu">quantile</span>(x,<span class="fl">0.75</span>)<span class="sc">-</span><span class="fu">quantile</span>(x,<span class="fl">0.5</span>);</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>   }</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>   <span class="cf">else</span> <span class="cf">if</span>(b<span class="sc">==</span><span class="dv">2</span>){</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>     lambda_hat <span class="ot">=</span> <span class="fu">quantile</span>(x,<span class="fl">0.5</span>)<span class="sc">-</span><span class="fu">quantile</span>(x,<span class="fl">0.25</span>);</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>   }</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>   <span class="cf">else</span> <span class="cf">if</span>(b<span class="sc">==</span><span class="dv">3</span>){</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>     lambda_hat <span class="ot">=</span> <span class="fl">0.5</span><span class="sc">*</span>(<span class="fu">quantile</span>(x,<span class="fl">0.75</span>)<span class="sc">-</span><span class="fu">quantile</span>(x,<span class="fl">0.25</span>));</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>   }</span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>   </span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>   return lambda_hat;</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+</div>
+<div id="利用逆矩估计法的点估计和区间估计" class="section level2">
+<h2>2.利用逆矩估计法的点估计和区间估计</h2>
+<div id="逆矩估计法的简单介绍" class="section level3">
+<h3>2.1 逆矩估计法的简单介绍</h3>
+<p>逆矩估计法的大体思路如下：若<span class="math inline">\(X_1,X_2,\cdots,X_n\)</span>为从一个含有未知参数的分布中取出的一组独立样本，一般来说，这些样本的分布与未知参数有关。现对每个样本进行同一种变换得到另一组样本<span class="math inline">\(Y_1,Y_2,\cdots,Y_n\)</span>，使得变换后的样本分布与这个未知参数无关（或者说<span class="math inline">\(Y_i\)</span>为一个枢轴变量）。这样新样本的总体矩不依赖于未知参数，但是样本矩依赖于未知参数，让总体矩等于样本矩，就可以得到未知参数的一个估计。逆矩估计既可以对未知参数参数进行点估计，也可应用于未知参数的区间估计。</p>
+<p>现考虑取自柯西分布<span class="math inline">\(Cau(\mu,\lambda)\)</span>的n个独立样本<span class="math inline">\(X_1,X_2,\cdots,X_n\)</span>，下面用逆矩估计方法分别讨论对<span class="math inline">\(\lambda\)</span>和<span class="math inline">\(\mu\)</span>的估计。</p>
+</div>
+<div id="对位置参数的估计尺度参数已知" class="section level3">
+<h3>2.2 对位置参数的估计（尺度参数已知）</h3>
+<div id="估计方法的介绍" class="section level4">
+<h4>2.2.1 估计方法的介绍</h4>
+<p>记随机变量<span class="math inline">\(Y_i=F_X^{-1}(X_i)=\frac{1}{2}+\frac{1}{\pi}\arctan
+\Big(\frac{X_i-\mu}{\lambda}\Big),i=1,2,\cdots,n\)</span>，则<span class="math inline">\(Y_i\)</span>独立同分布于均匀分布<span class="math inline">\(U(0,1)\)</span>，显然<span class="math inline">\(Y_i\)</span>的分布不依赖于未知参数<span class="math inline">\(\mu\)</span>，那么由逆矩估计的思想，<span class="math inline">\(Y_i\)</span>的一阶样本矩等于均匀分布<span class="math inline">\(U(0,1)\)</span>的期望，即 <span class="math display">\[\begin{equation*}
+    \frac{1}{n}\sum_{i = 1}^{n}  Y_i= \frac{1}{n}\sum_{i = 1}^{n}
+\Bigg[\frac{1}{2}+\frac{1}{\pi}\arctan
+    \Big(\frac{X_i-\mu}{\lambda}\Big) \Bigg]=\frac{1}{2},
+\end{equation*}\]</span> 或者说 <span class="math display">\[\begin{equation*}
+    \sum_{i = 1}^{n} \arctan
+    \Big(\frac{X_i-\mu}{\lambda}\Big) =0.
+\end{equation*}\]</span></p>
+<p>为了继续进行<span class="math inline">\(\mu\)</span>的点估计和区间估计，我们引入以下两个引理：</p>
+<p><strong>引理2.1</strong> 若<span class="math inline">\(Y_1,Y_2,\cdots,Y_n\)</span>独立同分布于均匀分布<span class="math inline">\(U(0,1)\)</span>，则 <span class="math display">\[\begin{equation*}
+        -2\sum_{i = 1}^{n} \ln Y_i \sim \chi^2(2n) .
+    \end{equation*}\]</span></p>
+<p><strong>引理2.2</strong></p>
+<p>(1)关于实数<span class="math inline">\(\mu\)</span>的方程 <span class="math display">\[
+g(\mu)=\sum_{i = 1}^{n} \arctan
+\Big(\frac{X_i-\mu}{\lambda}\Big) =0.
+\]</span> 有且仅有一个实数根。</p>
+<p>(2)对任意的<span class="math inline">\(a&gt;0\)</span>，关于实数<span class="math inline">\(\mu\)</span>的方程 <span class="math display">\[
+h(\mu)=-2 \sum_{i = 1}^{n} \ln \Bigg[ \frac{1}{2}+\frac{1}{\pi}\arctan
+\Big(\frac{X_i-\mu}{\lambda}\Big)\Bigg] =a.
+\]</span> 有且仅有一个实数根。</p>
+<p>于是根据上面这些引理，我们有以下结论：</p>
+<p>(1)尺度参数<span class="math inline">\(\mu\)</span>的点估计<span class="math inline">\(\hat{\mu}\)</span>就是方程<span class="math inline">\(g(\mu)=0\)</span>的实数根。</p>
+<p>(2)尺度参数<span class="math inline">\(\mu\)</span>的<span class="math inline">\(1-\alpha\)</span>置信区间为<span class="math inline">\([\hat{\mu_1},\hat{\mu_2}]\)</span>， 其中<span class="math inline">\(\hat{\mu_1},\hat{\mu_2}\)</span>分别为方程<span class="math inline">\(h(\mu)=\chi_{\alpha/2}^2(2n)\)</span>和方程 <span class="math inline">\(h(\mu)=\chi_{1-\alpha/2}^2(2n)\)</span>的实根。</p>
+</div>
+<div id="代码实现-1" class="section level4">
+<h4>2.2.2 代码实现</h4>
+<p>下面这个函数利用逆矩估计，在尺度参数<span class="math inline">\(\lambda\)</span>已知的情况下对位置参数<span class="math inline">\(\mu\)</span>进行点估计。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>Cauchy_paraest_IME_mu<span class="ot">&lt;-</span><span class="cf">function</span>(x,lambda){</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  f<span class="ot">&lt;-</span><span class="cf">function</span>(mu){</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    <span class="fu">sum</span>(<span class="fu">atan</span>((x<span class="sc">-</span>mu)<span class="sc">/</span>lambda))</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  }</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  </span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  xmin<span class="ot">&lt;-</span><span class="fu">min</span>(x)</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  xmax<span class="ot">&lt;-</span><span class="fu">max</span>(x)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="fu">uniroot</span>(f,<span class="fu">c</span>(xmin,xmax))<span class="sc">$</span>root</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>}</span></code></pre></div>
+<p>下面这个函数利用逆矩估计，在尺度参数<span class="math inline">\(\lambda\)</span>已知的情况下对位置参数<span class="math inline">\(\mu\)</span>进行区间估计。</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>Cauchy_intervalparaest_IME_mu<span class="ot">&lt;-</span><span class="cf">function</span>(x,lambda,alpha){</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  f<span class="ot">&lt;-</span><span class="cf">function</span>(mu){</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>    <span class="sc">-</span><span class="dv">2</span><span class="sc">*</span><span class="fu">sum</span>(<span class="fu">log</span>(<span class="fl">0.5</span><span class="sc">+</span><span class="dv">1</span><span class="sc">/</span>pi<span class="sc">*</span><span class="fu">atan</span>((x<span class="sc">-</span>mu)<span class="sc">/</span>lambda)))</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  }</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  </span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  xmin<span class="ot">&lt;-</span><span class="fu">min</span>(x)</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  xmax<span class="ot">&lt;-</span><span class="fu">max</span>(x)</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  n<span class="ot">&lt;-</span><span class="fu">length</span>(x)</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  </span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  f1<span class="ot">&lt;-</span><span class="cf">function</span>(mu){</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>    <span class="fu">f</span>(mu)<span class="sc">-</span><span class="fu">qchisq</span>(alpha<span class="sc">/</span><span class="dv">2</span>,<span class="dv">2</span><span class="sc">*</span>n)</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>  }</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>  </span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>  f2<span class="ot">&lt;-</span><span class="cf">function</span>(mu){</span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>    <span class="fu">f</span>(mu)<span class="sc">-</span><span class="fu">qchisq</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>,<span class="dv">2</span><span class="sc">*</span>n)</span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>  }</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>  </span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>  mu1_hat<span class="ot">&lt;-</span><span class="fu">uniroot</span>(f1,<span class="fu">c</span>(xmin,xmax))<span class="sc">$</span>root</span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>  mu2_hat<span class="ot">&lt;-</span><span class="fu">uniroot</span>(f2,<span class="fu">c</span>(xmin,xmax))<span class="sc">$</span>root</span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>  <span class="fu">c</span>(mu1_hat,mu2_hat)</span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+</div>
+<div id="对尺度参数的估计位置参数已知" class="section level3">
+<h3>2.3 对尺度参数的估计（位置参数已知）</h3>
+<div id="估计方法的介绍-1" class="section level4">
+<h4>2.3.1 估计方法的介绍</h4>
+<p>（1）点估计</p>
+<p>事先给定一个合适大小的常数<span class="math inline">\(C&gt;0\)</span>，记随机变量 <span class="math display">\[\begin{equation*}
+    Y_i=\begin{cases}
+        1,\quad |X_i-\mu|\leq C \\
+        0,\quad |X_i-\mu|&gt;C
+    \end{cases}
+    ,\quad i=1,2,\cdots,n
+\end{equation*}\]</span> 则<span class="math inline">\(Y_i\)</span>独立同分布于两点分布<span class="math inline">\(B(1,p)\)</span>，其中 <span class="math display">\[\begin{equation*}
+    p=P(|X_i-\mu|\leq C)=\frac{2}{\pi}\arctan \frac{C}{\lambda},
+\end{equation*}\]</span> 尽管此处<span class="math inline">\(Y_i\)</span>的分布依然依赖于未知参数<span class="math inline">\(\lambda\)</span>，但是依然可以借助逆矩估计的思想得出，
+<span class="math inline">\(Y_i\)</span>的一阶样本矩等于两点分布<span class="math inline">\(B(0,p)\)</span>的期望，即 <span class="math display">\[\begin{equation*}
+    \frac{1}{n} \sum_{i = 1}^{n} Y_i =  \frac{2}{\pi}\arctan
+\frac{C}{\lambda}.
+\end{equation*}\]</span> 于是得到<span class="math inline">\(\lambda\)</span>的一个点估计 <span class="math display">\[\begin{equation*}
+    \hat{\lambda}=\frac{C}{\tan\Big( \frac{\pi}{2n} \sum_{i = 1}^{n} Y_i
+\Big)}.
+\end{equation*}\]</span> 并作以下规定：当<span class="math inline">\(\sum_{i = 1}^{n} Y_i =n\)</span>时，<span class="math inline">\(\hat{\lambda}=0\)</span>； 当<span class="math inline">\(\sum_{i = 1}^{n} Y_i =0\)</span>时，<span class="math inline">\(\hat{\lambda}=+\infty\)</span>。实际应用中，若
+出现<span class="math inline">\(\sum_{i = 1}^{n}
+Y_i\)</span>接近0或者接近n的情况，往往分别说明常数<span class="math inline">\(C\)</span>取得太小或者太大， 可以重新调整常数<span class="math inline">\(C\)</span>的大小再次进行估计。</p>
+<p>（2）区间估计</p>
+<p>为了用上述方法得到<span class="math inline">\(\lambda\)</span>的区间估计，我们引入以下定理：</p>
+<p><strong>引理2.2</strong> 若<span class="math inline">\(X_1,X_2,\cdots,X_n\)</span>为从两点分布<span class="math inline">\(B(1,p)\)</span>中取出的独立样本，其中<span class="math inline">\(p\)</span>为未知参数，则 参数<span class="math inline">\(p\)</span>的<span class="math inline">\(1-\alpha\)</span>区间估计为<span class="math inline">\([\hat{p_1},\hat{p_2}]\)</span>，其中 <span class="math display">\[\begin{equation*}
+    \hat{p_1}=\frac{1}{1+\frac{n-x_0+1}{x_0}
+F_{1-\alpha_1}\big(2(n-x_0+1),2x_0\big)},
+\end{equation*}\]</span> <span class="math display">\[\begin{equation*}
+    \hat{p_2}=\frac{\frac{x_0+1}{n-x_0}
+F_{1-\alpha_2}\big(2(x_0+1),2(n-x_0)\big)}{1+\frac{x_0+1}{n-x_0}
+F_{1-\alpha_2}\big(2(x_0+1),2(n-x_0)\big)}.
+\end{equation*}\]</span> 其中<span class="math inline">\(x_0=\sum_{i =
+1}^{n} X_i\)</span>，<span class="math inline">\(\alpha_1,\alpha_2\)</span>为非负实数且<span class="math inline">\(\alpha_1+\alpha_2=\alpha\)</span>， <span class="math inline">\(F_{\alpha}(m_1,m_2)\)</span>是参数为<span class="math inline">\(m_1,m_2\)</span>的F分布的<span class="math inline">\(\alpha\)</span>左分位数，特别地</p>
+<p>当<span class="math inline">\(x_0=0\)</span>时，取<span class="math inline">\(\hat{p_1}=0,\hat{p_2}=\frac{F_{1-\alpha}(2n)}{n+F_{1-\alpha}(2n)}\)</span>；</p>
+<p>当<span class="math inline">\(x_0=n\)</span>时，取<span class="math inline">\(\hat{p_1}=\frac{n}{n+F_{1-\alpha}(2n)},\hat{p_2}=1\)</span>.</p>
+<p>根据以上引理，我们记<span class="math inline">\(y_0=\sum_{i=1}^{n}
+Y_i\)</span>，当<span class="math inline">\(y_0\neq 0\)</span>或<span class="math inline">\(n\)</span>时，记 <span class="math display">\[\begin{equation*}
+    p_1=\frac{1}{1+\frac{n-y_0+1}{y_0}
+F_{1-\alpha_1}\big(2(n-y_0+1),2y_0\big)},
+\end{equation*}\]</span> <span class="math display">\[\begin{equation*}
+    p_2=\frac{\frac{y_0+1}{n-y_0}
+F_{1-\alpha_2}\big(2(y_0+1),2(n-y_0)\big)}{1+\frac{y_0+1}{n-y_0}
+F_{1-\alpha_2}\big(2(y_0+1),2(n-y_0)\big)}.
+\end{equation*}\]</span> 解不等式<span class="math inline">\(p_1\leq
+\frac{2}{\pi}\arctan \frac{C}{\lambda}\leq p_2\)</span> 就可以得到<span class="math inline">\(\lambda\)</span>的<span class="math inline">\(1-\alpha\)</span>的区间估计<span class="math inline">\([\hat{\lambda_1},\hat{\lambda_2}]\)</span>， 其中
+<span class="math display">\[\begin{equation*}
+    \hat{\lambda_1}=\frac{C}{\tan \big(\frac{\pi}{2} p_2\big)},
+\end{equation*}\]</span> <span class="math display">\[\begin{equation*}
+    \hat{\lambda_2}=\frac{C}{\tan \big(\frac{\pi}{2} p_1\big)}.
+\end{equation*}\]</span></p>
+<p>当<span class="math inline">\(y_0=0\)</span>时，取<span class="math inline">\(\hat{\lambda_1}=\frac{C}{\tan \big( \frac{\pi}{2}
+\frac{F_{1-\alpha}(2n)}{n+F_{1-\alpha}(2n)} \big)}\)</span>, <span class="math inline">\(\hat{\lambda_2}=+\infty\)</span>；</p>
+<p>当<span class="math inline">\(y_0=n\)</span>时，取<span class="math inline">\(\hat{\lambda_1}=0\)</span>, <span class="math inline">\(\hat{\lambda_2}=\frac{C}{\tan\big(\frac{\pi}{2}\frac{1}{n+F_{1-\alpha}(2n)}
+\big)}\)</span>.</p>
+</div>
+<div id="代码实现-2" class="section level4">
+<h4>2.3.2 代码实现</h4>
+<p>下面这个函数利用逆矩估计，在位置参数<span class="math inline">\(\mu\)</span>已知的情况下对尺度参数<span class="math inline">\(\lambda\)</span>进行点估计。</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>Cauchy_paraest_IME_lambda<span class="ot">&lt;-</span><span class="cf">function</span>(x,mu,C){</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  y<span class="ot">&lt;-</span><span class="fu">as.numeric</span>(<span class="fu">abs</span>(x<span class="sc">-</span>mu)<span class="sc">&lt;=</span>C)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">sum</span>(y)<span class="sc">&gt;</span><span class="dv">0</span><span class="sc">&amp;&amp;</span><span class="fu">sum</span>(y)<span class="sc">&lt;</span><span class="fu">length</span>(x))</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  n<span class="ot">&lt;-</span><span class="fu">length</span>(x)</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  C<span class="sc">/</span><span class="fu">tan</span>(pi<span class="sc">*</span><span class="fu">sum</span>(y)<span class="sc">/</span>(<span class="dv">2</span><span class="sc">*</span>n))</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>}</span></code></pre></div>
+<p>下面这个函数利用逆矩估计，在位置参数<span class="math inline">\(\mu\)</span>已知的情况下对尺度参数<span class="math inline">\(\lambda\)</span>进行区间估计。</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>Cauchy_intervalparaest_IME_lambda<span class="ot">&lt;-</span><span class="cf">function</span>(x,mu,C,alpha1,alpha2){</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  y<span class="ot">&lt;-</span><span class="fu">as.numeric</span>(<span class="fu">abs</span>(x<span class="sc">-</span>mu)<span class="sc">&lt;=</span>C)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">sum</span>(y)<span class="sc">&gt;</span><span class="dv">0</span><span class="sc">&amp;&amp;</span><span class="fu">sum</span>(y)<span class="sc">&lt;</span><span class="fu">length</span>(x))</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  </span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  n<span class="ot">&lt;-</span><span class="fu">length</span>(x)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  y0<span class="ot">&lt;-</span><span class="fu">sum</span>(y)</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  </span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  p1<span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span>(n<span class="sc">-</span>y0<span class="sc">+</span><span class="dv">1</span>)<span class="sc">/</span>y0<span class="sc">*</span><span class="fu">qf</span>(<span class="dv">1</span><span class="sc">-</span>alpha1,<span class="dv">2</span><span class="sc">*</span>(n<span class="sc">-</span>y0<span class="sc">+</span><span class="dv">1</span>),<span class="dv">2</span><span class="sc">*</span>y0))</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  p2<span class="ot">&lt;-</span><span class="dv">1-1</span><span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span>(y0<span class="sc">+</span><span class="dv">1</span>)<span class="sc">/</span>(n<span class="sc">-</span>y0)<span class="sc">*</span><span class="fu">qf</span>(<span class="dv">1</span><span class="sc">-</span>alpha2,<span class="dv">2</span><span class="sc">*</span>(y0<span class="sc">+</span><span class="dv">1</span>),<span class="dv">2</span><span class="sc">*</span>(n<span class="sc">-</span>y0)))</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  </span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>  lambda1_hat<span class="ot">&lt;-</span>C<span class="sc">/</span><span class="fu">tan</span>(pi<span class="sc">*</span>p2<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>  lambda2_hat<span class="ot">&lt;-</span>C<span class="sc">/</span><span class="fu">tan</span>(pi<span class="sc">*</span>p1<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>  <span class="fu">c</span>(lambda1_hat,lambda2_hat)</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="几种估计方法的模拟和比较" class="section level2">
+<h2>3.几种估计方法的模拟和比较</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">5</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>x1<span class="ot">&lt;-</span><span class="fu">rcauchy</span>(<span class="dv">10</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>x2<span class="ot">&lt;-</span><span class="fu">rcauchy</span>(<span class="dv">50</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>x3<span class="ot">&lt;-</span><span class="fu">rcauchy</span>(<span class="dv">200</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>x4<span class="ot">&lt;-</span><span class="fu">rcauchy</span>(<span class="dv">1000</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>mu<span class="ot">&lt;-</span><span class="dv">0</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>lambda<span class="ot">&lt;-</span><span class="dv">1</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>C<span class="ot">&lt;-</span><span class="fl">1.5</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>alpha<span class="ot">&lt;-</span><span class="fl">0.05</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>alpha1<span class="ot">&lt;-</span>alpha2<span class="ot">&lt;-</span><span class="fl">0.025</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>order_mu_est<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="fu">Cauchy_paraest_mu</span>(<span class="fu">sort</span>(x1),<span class="dv">2</span>),<span class="fu">Cauchy_paraest_mu</span>(<span class="fu">sort</span>(x2),<span class="dv">2</span>),<span class="fu">Cauchy_paraest_mu</span>(<span class="fu">sort</span>(x3),<span class="dv">2</span>),<span class="fu">Cauchy_paraest_mu</span>(<span class="fu">sort</span>(x4),<span class="dv">2</span>))</span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>order_lambda_est<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="fu">Cauchy_paraest_lambda</span>(<span class="fu">sort</span>(x1),<span class="dv">3</span>),<span class="fu">Cauchy_paraest_lambda</span>(<span class="fu">sort</span>(x2),<span class="dv">3</span>),<span class="fu">Cauchy_paraest_lambda</span>(<span class="fu">sort</span>(x3),<span class="dv">3</span>),<span class="fu">Cauchy_paraest_lambda</span>(<span class="fu">sort</span>(x4),<span class="dv">3</span>))</span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>IME_mu_est<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="fu">Cauchy_paraest_IME_mu</span>(x1,lambda),<span class="fu">Cauchy_paraest_IME_mu</span>(x2,lambda),<span class="fu">Cauchy_paraest_IME_mu</span>(x3,lambda),<span class="fu">Cauchy_paraest_IME_mu</span>(x4,lambda))</span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>IME_lambda_est<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="fu">Cauchy_paraest_IME_lambda</span>(x1,mu,C),<span class="fu">Cauchy_paraest_IME_lambda</span>(x2,mu,C),<span class="fu">Cauchy_paraest_IME_lambda</span>(x3,mu,C),<span class="fu">Cauchy_paraest_IME_lambda</span>(x4,mu,C))</span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>IME_mu_intervalest<span class="ot">&lt;-</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fu">Cauchy_intervalparaest_IME_mu</span>(x1,lambda,alpha),<span class="fu">Cauchy_intervalparaest_IME_mu</span>(x2,lambda,alpha),<span class="fu">Cauchy_intervalparaest_IME_mu</span>(x3,lambda,alpha),<span class="fu">Cauchy_intervalparaest_IME_mu</span>(x4,lambda,alpha)),<span class="at">nrow=</span><span class="dv">2</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>IME_lambda_intervalest<span class="ot">&lt;-</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fu">Cauchy_intervalparaest_IME_lambda</span>(x1,mu,C,alpha1,alpha2),<span class="fu">Cauchy_intervalparaest_IME_lambda</span>(x2,mu,C,alpha1,alpha2),<span class="fu">Cauchy_intervalparaest_IME_lambda</span>(x3,mu,C,alpha1,alpha2),<span class="fu">Cauchy_intervalparaest_IME_lambda</span>(x4,mu,C,alpha1,alpha2)),<span class="at">nrow=</span><span class="dv">2</span>)</span></code></pre></div>
+<p><span class="math inline">\(mu\)</span>基于顺序统计量的点估计</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>order_mu_est</span></code></pre></div>
+<pre><code>## [1] -0.420439171  0.275222457  0.125748533 -0.009250449</code></pre>
+<p><span class="math inline">\(mu\)</span>基于逆矩估计法的点估计</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>IME_mu_est</span></code></pre></div>
+<pre><code>## [1] -0.36989052  0.30646203  0.09369902  0.00524364</code></pre>
+<p><span class="math inline">\(mu\)</span>基于逆矩估计法的区间估计</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>IME_mu_intervalest</span></code></pre></div>
+<pre><code>##           [,1]       [,2]        [,3]       [,4]
+## [1,] -2.451365 -0.3911377 -0.09512312 -0.1283219
+## [2,]  1.142276  1.0675756  0.55093567  0.1871730</code></pre>
+<p><span class="math inline">\(lambda\)</span>基于顺序统计量的点估计</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>order_lambda_est</span></code></pre></div>
+<pre><code>## [1] 0.7769494 0.8640012 0.7985698 0.9997844</code></pre>
+<p><span class="math inline">\(lambda\)</span>基于逆矩估计法的点估计</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>IME_lambda_est</span></code></pre></div>
+<pre><code>## [1] 0.4873795 1.0193989 0.8712693 1.0263025</code></pre>
+<p><span class="math inline">\(lambda\)</span>基于逆矩估计法的区间估计</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>IME_lambda_intervalest</span></code></pre></div>
+<pre><code>##            [,1]      [,2]      [,3]      [,4]
+## [1,] 0.05943245 0.6116836 0.6772168 0.9249502
+## [2,] 1.79071240 1.6394068 1.1079050 1.1370505</code></pre>
+<p>可以看出，各种估计方法都有不错的效果，且随着样本个数的增加，估计的效果会更好。</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
