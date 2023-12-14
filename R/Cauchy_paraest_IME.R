@@ -79,8 +79,8 @@ Cauchy_intervalparaest_IME_mu<-function(x,lambda,alpha){
   c(mu1_hat,mu2_hat)
 }
 
-#' @title Interval estimation of the positional parameter of a Cauchy distribution using R.
-#' @description Inverse moment interval estimation of the positional parameter of a Cauchy distribution if the scale parameter is known.
+#' @title Interval estimation of the scale parameter of a Cauchy distribution using R.
+#' @description Inverse moment interval estimation of the scale parameter of a Cauchy distribution if the positional parameter is known.
 #' @param x the i.i.d Cauchy variables (numeric)
 #' @param mu the positional parameter of a Cauchy distribution (numeric)
 #' @param C a suitable positive constant

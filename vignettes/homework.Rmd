@@ -4,7 +4,7 @@ author: "Zheyu Li"
 date: "2023-12-04"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to SA23204189}
+  %\VignetteIndexEntry{Homework of SA23204189}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
